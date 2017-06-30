@@ -4,7 +4,7 @@
 
 ## Installation
 
-`$ go install`
+`$ go install github.com/honeycombio/honeymarker`
 
 ;)
 
