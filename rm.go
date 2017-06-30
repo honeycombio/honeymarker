@@ -22,9 +22,9 @@ func init() {
 }
 
 func (r *RmCommand) Execute(args []string) error {
-	postURL, err := url.Parse(options.PostURL)
+	postURL, err := url.Parse(options.APIHost)
 	if err != nil {
-		errMsg := fmt.Sprintf("Failed to parse URL %s", options.PostURL)
+		errMsg := fmt.Sprintf("Failed to parse URL %s", options.APIHost)
 		return errors.New(errMsg)
 	}
 	postURL.Path = "/1/markers/" + options.Dataset + "/" + r.MarkerID

@@ -61,9 +61,9 @@ func (l *ListCommand) formatTime(timestamp int64) string {
 }
 
 func (l *ListCommand) Execute(args []string) error {
-	postURL, err := url.Parse(options.PostURL)
+	postURL, err := url.Parse(options.APIHost)
 	if err != nil {
-		errMsg := fmt.Sprintf("Failed to parse URL %s", options.PostURL)
+		errMsg := fmt.Sprintf("Failed to parse URL %s", options.APIHost)
 		return errors.New(errMsg)
 	}
 	postURL.Path = "/1/markers/" + options.Dataset

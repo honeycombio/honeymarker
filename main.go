@@ -11,7 +11,7 @@ import (
 type Options struct {
 	WriteKey string `short:"k" long:"writekey" description:"Honeycomb write key from https://ui.honeycomb.io/account" required:"true"`
 	Dataset  string `short:"d" long:"dataset" description:"Honeycomb dataset name from https://ui.honeycomb.io/dashboard" required:"true"`
-	PostURL  string `long:"postURL" hidden:"true" default:"https://api.honeycomb.io/"`
+	APIHost  string `long:"api_host" hidden:"true" default:"https://api.honeycomb.io/"`
 }
 
 var options Options
