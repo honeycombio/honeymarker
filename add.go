@@ -8,8 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/honeycombio/hound/types"
 )
 
 type AddCommand struct {
@@ -44,7 +42,7 @@ func init() {
 
 func (a *AddCommand) Execute(args []string) error {
 
-	marker := types.Marker{
+	marker := Marker{
 		StartTime: a.StartTime,
 		EndTime:   a.EndTime,
 		Message:   a.Message,

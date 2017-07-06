@@ -10,8 +10,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/honeycombio/hound/types"
 )
 
 type ListCommand struct {
@@ -101,7 +99,7 @@ func (l *ListCommand) ListAsJSON(body []byte) error {
 
 func (l *ListCommand) ListAsTable(body []byte) error {
 	// Unmarshal string into structs.
-	var markers []types.Marker
+	var markers []Marker
 	json.Unmarshal(body, &markers)
 
 	urlColumnWidth := 0
@@ -155,7 +153,7 @@ func (l *ListCommand) ListAsTable(body []byte) error {
 	)
 	for _, m := range markers {
 		fmt.Printf("| %-[2]*[1]s | %[4]*[3]s | %[6]*[5]s | %-[8]*[7]s | %-[10]*[9]s | %-[12]*[11]s |\n",
-			m.PK(), IdColumnWidth,
+			m.ID, IdColumnWidth,
 			l.formatTime(m.StartTime), timeColumnWidth,
 			l.formatTime(m.EndTime), timeColumnWidth,
 			m.Type, TypeColumnWidth,

@@ -8,8 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/honeycombio/hound/types"
 )
 
 type UpdateCommand struct {
@@ -32,7 +30,7 @@ func init() {
 
 func (u *UpdateCommand) Execute(args []string) error {
 
-	marker := types.Marker{
+	marker := Marker{
 		StartTime: u.StartTime,
 		EndTime:   u.EndTime,
 		Message:   u.Message,
