@@ -13,17 +13,8 @@ import (
 )
 
 type ListCommand struct {
-	JSON           bool `long:"json" description:"output the list as json instead of in tabular form."`
+	JSON           bool `long:"json" description:"Output the list as json instead of in tabular form."`
 	UnixTimestamps bool `long:"unix_time" description:"In table mode, format times as unit timestamps (seconds since the epoch)"`
-}
-
-var listCommand ListCommand
-
-func init() {
-	parser.AddCommand("list",
-		"list all markers",
-		"list all markers for a given dataset",
-		&listCommand)
 }
 
 const (
@@ -99,13 +90,15 @@ func (l *ListCommand) ListAsJSON(body []byte) error {
 
 func (l *ListCommand) ListAsTable(body []byte) error {
 	// Unmarshal string into structs.
-	var markers []Marker
-	json.Unmarshal(body, &markers)
+	var mkrs []marker
+	if err := json.Unmarshal(body, &mkrs); err != nil {
+		return err
+	}
 
 	urlColumnWidth := 0
 	messageColumnWidth := 0
 
-	for _, m := range markers {
+	for _, m := range mkrs {
 		if len(m.Message) > messageColumnWidth {
 			messageColumnWidth = len(m.Message)
 		}
@@ -136,7 +129,7 @@ func (l *ListCommand) ListAsTable(body []byte) error {
 	}
 
 	fmt.Printf("| %-[2]*[1]s | %[4]*[3]s | %[6]*[5]s | %-[8]*[7]s | %-[10]*[9]s | %-[12]*[11]s |\n",
-		"Id", IdColumnWidth,
+		"ID", IdColumnWidth,
 		"Start Time", timeColumnWidth,
 		"End Time", timeColumnWidth,
 		"Type", TypeColumnWidth,
@@ -151,7 +144,7 @@ func (l *ListCommand) ListAsTable(body []byte) error {
 		strings.Repeat("-", messageColumnWidth),
 		strings.Repeat("-", urlColumnWidth),
 	)
-	for _, m := range markers {
+	for _, m := range mkrs {
 		fmt.Printf("| %-[2]*[1]s | %[4]*[3]s | %[6]*[5]s | %-[8]*[7]s | %-[10]*[9]s | %-[12]*[11]s |\n",
 			m.ID, IdColumnWidth,
 			l.formatTime(m.StartTime), timeColumnWidth,

@@ -19,25 +19,14 @@ type UpdateCommand struct {
 	Type      string `short:"t" long:"type" description:"type of the marker"`
 }
 
-var updateCommand UpdateCommand
-
-func init() {
-	parser.AddCommand("update",
-		"update a marker",
-		"update an existing marker with the specified options. IDs available from the 'list' command.",
-		&updateCommand)
-}
-
 func (u *UpdateCommand) Execute(args []string) error {
-
-	marker := Marker{
+	blob, err := json.Marshal(marker{
 		StartTime: u.StartTime,
 		EndTime:   u.EndTime,
 		Message:   u.Message,
 		Type:      u.Type,
 		URL:       u.URL,
-	}
-	blob, err := json.Marshal(marker)
+	})
 	if err != nil {
 		return err
 	}

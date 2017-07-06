@@ -69,7 +69,7 @@ $
 Example:
 ```
 $ ./honeymarker -k $WRITE_KEY -d myservice list
-| Id          |      Start Time |        End Time | Type         | Message      | URL |
+| ID          |      Start Time |        End Time | Type         | Message      | URL |
 +-------------+-----------------+-----------------+--------------+--------------+-----+
 | n71R3zM1Tn3 | Jun 28 11:55:11 |                 | deploy       | build 192837 |     |
 
@@ -111,7 +111,7 @@ $ ./honeymarker -k $WRITE_KEY -d myservice rm -i n71R3zM1Tn3
 {"created_at":"2017-06-28T18:55:11Z","updated_at":"2017-06-28T18:57:47Z","start_time":1498676111,"message":"build 192837","type":"deploy","url":"http://my.service.co/builds/192837","id":"n71R3zM1Tn3"}
 
 $ ./honeymarker -k $WRITE_KEY -d myservice list
-| Id          |      Start Time |        End Time | Type         | Message | URL |
+| ID          |      Start Time |        End Time | Type         | Message | URL |
 +-------------+-----------------+-----------------+--------------+---------+-----+
 $
 ```

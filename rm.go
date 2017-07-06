@@ -12,15 +12,6 @@ type RmCommand struct {
 	MarkerID string `short:"i" long:"id" description:"ID of the marker to delete" required:"true"`
 }
 
-var rmCommand RmCommand
-
-func init() {
-	parser.AddCommand("rm",
-		"delete a marker",
-		"delete the marker identified by ID. IDs available from the 'list' command",
-		&rmCommand)
-}
-
 func (r *RmCommand) Execute(args []string) error {
 	postURL, err := url.Parse(options.APIHost)
 	if err != nil {
