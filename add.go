@@ -11,45 +11,21 @@ import (
 )
 
 type AddCommand struct {
-	StartTime int64  `short:"s" long:"start_time" description:"start time for the marker in unix time (seconds since the epoch)"`
-	EndTime   int64  `short:"e" long:"end_time" hidden:"true" description:"end time for the marker in unix time (seconds since the epoch)"`
-	Message   string `short:"m" long:"msg" description:"message describing this specific marker"`
+	StartTime int64  `short:"s" long:"start_time" description:"Start time for the marker in unix time (seconds since the epoch)"`
+	EndTime   int64  `short:"e" long:"end_time" hidden:"true" description:"End time for the marker in unix time (seconds since the epoch)"`
+	Message   string `short:"m" long:"msg" description:"Message describing this specific marker"`
 	URL       string `short:"u" long:"url" description:"URL associated with this marker"`
-	Type      string `short:"t" long:"type" description:"identifies marker type"`
-}
-
-var addCommand AddCommand
-
-const add_usage = `add creates a new marker with the specified attributes
-
-  All parameters to add are optional.
-
-  If start_time is missing, the marker will be assigned the current time.
-
-  It is highly recommended that you fill in either message or type.
-  All markers of the same type will be shown with the same color in the UI.
-  The message will be visible above an individual marker.
-
-	If a URL is specified along with a message, the message will be shown
-	as a link in the UI, and clicking it will take you to the URL.`
-
-func init() {
-	parser.AddCommand("add",
-		"add a new marker",
-		add_usage,
-		&addCommand)
+	Type      string `short:"t" long:"type" description:"Identifies marker type"`
 }
 
 func (a *AddCommand) Execute(args []string) error {
-
-	marker := Marker{
+	blob, err := json.Marshal(marker{
 		StartTime: a.StartTime,
 		EndTime:   a.EndTime,
 		Message:   a.Message,
 		Type:      a.Type,
 		URL:       a.URL,
-	}
-	blob, err := json.Marshal(marker)
+	})
 	if err != nil {
 		return err
 	}

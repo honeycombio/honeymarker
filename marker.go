@@ -2,7 +2,8 @@ package main
 
 import "time"
 
-type Marker struct {
+// The marker type, as described by https://honeycomb.io/docs/reference/api/#markers
+type marker struct {
 	ID string `json:"id"`
 
 	CreatedAt time.Time `json:"created_at"`
