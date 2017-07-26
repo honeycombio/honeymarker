@@ -28,5 +28,4 @@ fpm -s dir -n honeymarker \
     -p $GOPATH/bin \
     -v $version \
     -t $pkg_type \
-    --pre-install=./preinstall \
     $GOPATH/bin/honeymarker=/usr/bin/honeymarker
