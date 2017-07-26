@@ -1,0 +1,15 @@
+{
+	"ImportPath": "github.com/honeycombio/honeymarker",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/jessevdk/go-flags",
+			"Comment": "v1.3.0-3-g6cf8f02",
+			"Rev": "6cf8f02b4ae8ba723ddc64dcfd403e530c06d927"
+		}
+	]
+}
