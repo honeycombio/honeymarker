@@ -8,6 +8,12 @@ import (
 	flag "github.com/jessevdk/go-flags"
 )
 
+// BuildID is set by Travis CI
+var BuildID string
+
+// UserAgent is what gets included in all http requests to the api
+var UserAgent string
+
 type Options struct {
 	WriteKey string `short:"k" long:"writekey" description:"Honeycomb write key from https://ui.honeycomb.io/account" required:"true"`
 	Dataset  string `short:"d" long:"dataset" description:"Honeycomb dataset name from https://ui.honeycomb.io/dashboard" required:"true"`
@@ -27,7 +33,21 @@ var usage = `-k <writekey> -d <dataset> COMMAND [other flags]
 
   'honeymarker COMMAND --help' will print command-specific flags`
 
+// setVersion sets the internal version ID and updates libhoney's user-agent
+func setVersionUserAgent() {
+	var version string
+
+	if BuildID == "" {
+		version = "dev"
+	} else {
+		version = BuildID
+	}
+	UserAgent = fmt.Sprintf("honeymarker/%s", version)
+}
+
 func main() {
+	setVersionUserAgent()
+
 	parser.AddCommand("add", "Add a new marker",
 		`add creates a new marker with the specified attributes.
 

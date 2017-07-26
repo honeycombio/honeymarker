@@ -39,6 +39,7 @@ func (u *UpdateCommand) Execute(args []string) error {
 	postURL.Path = "/1/markers/" + options.Dataset + "/" + u.MarkerID
 
 	req, err := http.NewRequest("PUT", postURL.String(), bytes.NewBuffer(blob))
+	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("X-Honeycomb-Team", options.WriteKey)
 	resp, err := client.Do(req)

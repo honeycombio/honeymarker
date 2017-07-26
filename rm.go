@@ -20,6 +20,7 @@ func (r *RmCommand) Execute(args []string) error {
 	}
 	postURL.Path = "/1/markers/" + options.Dataset + "/" + r.MarkerID
 	req, err := http.NewRequest("DELETE", postURL.String(), nil)
+	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Add("X-Honeycomb-Team", options.WriteKey)
 	resp, err := client.Do(req)
 	if err != nil {
