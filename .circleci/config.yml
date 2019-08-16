@@ -61,7 +61,7 @@ jobs:
             - buildevents/berun:
                 bename: go_test
                 becommand: go test -v ./...
-  build:
+  build_bins:
     executor: linuxgo
     steps:
       - buildevents/with_job_span:
@@ -76,6 +76,42 @@ jobs:
             - go-build:
                 os: darwin
                 arch: amd64
+
+    - sudo apt-get -qq update
+    - sudo apt-get install -y build-essential rpm
+    - gem install fpm
+
+            - buildevents/berun:
+                bename: build_deb
+                becommand: ./build-pkg.sh -v "1.${BUILD_ID}" -t deb
+            - buildevents/berun:
+                bename: build_rpm
+                becommand: ./build-pkg.sh -v "1.${BUILD_ID}" -t rpm
+
+            - run: mkdir -v artifacts; cp -v $GOPATH/bin/honeymarker-* artifacts/
+
+            - run: echo "size=$(du -sb artifacts | cut -f 1)" >> $BASH_ENV
+            - buildevents/add_context:
+                field_name: artifacts_size_bytes
+                field_value: $size
+
+            - persist_to_workspace:
+                root: artifacts
+                paths:
+                  - honeymarker-*
+            - store_artifacts:
+                path: artifacts/
+
+  build_pkgs:
+    executor: linuxgo
+    steps:
+      - buildevents/with_job_span:
+          steps:
+            - checkout
+            - run: sudo apt-get -qq update
+            - run: sudo apt-get install -y build-essential rpm
+            - run: gem install fpm
+
             - buildevents/berun:
                 bename: build_deb
                 becommand: ./build-pkg.sh -v "1.${BUILD_ID}" -t deb
@@ -151,7 +187,13 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - build:
+      - build_bins:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
+      - build_pkgs:
           requires:
             - setup
           filters:
@@ -159,7 +201,7 @@ workflows:
               only: /.*/
       - publish_github:
           requires:
-            - build
+            - build_bins
           filters:
             tags:
               only: /^v.*/
@@ -167,7 +209,7 @@ workflows:
               ignore: /.*/
       - publish_s3:
           requires:
-            - build
+            - build_pkgs
           filters:
             tags:
               only: /^v.*/
