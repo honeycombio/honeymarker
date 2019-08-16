@@ -28,4 +28,4 @@ fpm -s dir -n honeymarker \
     -p $GOPATH/bin \
     -v $version \
     -t $pkg_type \
-    $GOPATH/bin/honeymarker=/usr/bin/honeymarker
+    artifacts/honeymarker=/usr/bin/honeymarker

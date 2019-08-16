@@ -1,0 +1,214 @@
+version: 2.1
+
+orbs:
+  buildevents: honeycombio/buildevents@0.2.3
+  aws-cli: circleci/aws-cli@0.1.13
+
+executors:
+  linuxgo:
+    working_directory: /go/src/github.com/honeycombio/honeymarker
+    docker:
+      - image: circleci/golang:1.12
+  pkg:
+    ## executor with ruby for installing fpm and building packages
+    docker:
+      - image: circleci/ruby:latest
+
+
+commands:
+  go-build:
+    parameters:
+      os:
+        description: Target operating system
+        type: enum
+        enum: ["linux", "darwin"]
+        default: "linux"
+      arch:
+        description: Target architecture
+        type: enum
+        enum: ["386", "amd64"]
+        default: "amd64"
+    steps:
+      - run: |
+          GOOS=<< parameters.os >> \
+          GOARCH=<< parameters.arch >> \
+          CGO_ENABLED=0 \
+          buildevents cmd $CIRCLE_WORKFLOW_ID $BUILDEVENTS_SPAN_ID go_build -- \
+          go build -ldflags "-X main.BuildID=${CIRCLE_TAG}" \
+          -o $GOPATH/bin/honeymarker-<< parameters.os >>-<< parameters.arch >> \
+          ./...
+
+jobs:
+  setup:
+    executor: linuxgo
+    steps:
+      - buildevents/start_trace
+      - run: |
+          mkdir workspace
+          echo $(( $CIRCLE_BUILD_NUM + 1000 )) > workspace/build_id
+          cat workspace/build_id
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build_id
+  watch:
+    executor: linuxgo
+    steps:
+      - buildevents/watch_build_and_finish
+
+  test:
+    executor: linuxgo
+    steps:
+      - buildevents/with_job_span:
+          steps:
+            - checkout
+            - buildevents/berun:
+                bename: go_test
+                becommand: go test -v ./...
+  build_bins:
+    executor: linuxgo
+    steps:
+      - buildevents/with_job_span:
+          steps:
+            - checkout
+            - go-build:
+                os: linux
+                arch: "386"
+            - go-build:
+                os: linux
+                arch: amd64
+            - go-build:
+                os: darwin
+                arch: amd64
+
+            - run: mkdir -v artifacts; cp -v $GOPATH/bin/honeymarker-* artifacts/
+
+            - run: echo "size=$(du -sb artifacts | cut -f 1)" >> $BASH_ENV
+            - buildevents/add_context:
+                field_name: artifacts_size_bytes
+                field_value: $size
+
+            - persist_to_workspace:
+                root: artifacts
+                paths:
+                  - honeymarker-*
+            - store_artifacts:
+                path: artifacts/
+
+
+  # build_pkgs:
+  #   executor: pkg
+  #   steps:
+  #     - buildevents/with_job_span:
+  #         steps:
+  #           - checkout
+  #           - run: sudo apt-get -qq update
+  #           - run: sudo apt-get install -y build-essential rpm
+  #           - run: gem install fpm
+
+  #           - attach_workspace:
+  #               at: artifacts
+
+  #           - buildevents/berun:
+  #               bename: build_deb
+  #               becommand: ./build-pkg.sh -v "1.${BUILD_ID}" -t deb
+  #           - buildevents/berun:
+  #               bename: build_rpm
+  #               becommand: ./build-pkg.sh -v "1.${BUILD_ID}" -t rpm
+
+  #           - run: mkdir -v artifacts; cp -v $GOPATH/bin/honeymarker-* artifacts/
+
+  #           - run: echo "size=$(du -sb artifacts | cut -f 1)" >> $BASH_ENV
+  #           - buildevents/add_context:
+  #               field_name: artifacts_size_bytes
+  #               field_value: $size
+
+  #           - persist_to_workspace:
+  #               root: artifacts
+  #               paths:
+  #                 - honeymarker-*
+  #           - store_artifacts:
+  #               path: artifacts/
+
+  publish_github:
+    docker:
+      - image: cibuilds/github:0.12.2
+    steps:
+      - buildevents/with_job_span:
+          steps:
+            - attach_workspace:
+                at: artifacts
+            - run:
+                name: "Publish Release on GitHub"
+                command: |
+                  echo "about to publish to tag ${CIRCLE_TAG}"
+                  ls -l *
+                  ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-linux-386
+                  ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-linux-amd64
+                  ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-darwin-amd64
+
+  # publish_s3:
+  #   executor: linuxgo
+  #   steps:
+  #     - buildevents/with_job_span:
+  #         steps:
+  #           - attach_workspace:
+  #               at: artifacts
+  #           - run: echo "export BUILD_ID=$(cat workspace/build_id)" >> $BASH_ENV
+  #           - run:
+  #               name: "Publish Released Packages to S3"
+  #               command: |
+  #                 echo "about to publish to tag ${CIRCLE_TAG}"
+  #                 ls -l *
+  #                 for artifact in artifacts/honeymarker-*; do
+  #                   aws s3 cp $artifact s3://honeycomb-builds/honeycombio/honeymarker/${BUILD_ID}/${BUILD_ID}.1/home/travis/gopath/bin/
+  #                 done
+
+
+workflows:
+  build:
+    jobs:
+      - setup:
+          filters:
+            tags:
+              only: /.*/
+      - watch:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
+      - test:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
+      - build_bins:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
+      # - build_pkgs:
+      #     requires:
+      #       - setup
+      #     filters:
+      #       tags:
+      #         only: /.*/
+      - publish_github:
+          requires:
+            - build_bins
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      # - publish_s3:
+      #     requires:
+      #       - build_pkgs
+      #     filters:
+      #       tags:
+      #         only: /^v.*/
+      #       branches:
+      #         ignore: /.*/
