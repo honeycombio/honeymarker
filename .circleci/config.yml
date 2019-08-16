@@ -9,6 +9,11 @@ executors:
     working_directory: /go/src/github.com/honeycombio/honeymarker
     docker:
       - image: circleci/golang:1.12
+  pkg:
+    ## executor with ruby for installing fpm and building packages
+    working_directory: /go/src/github.com/honeycombio/honeymarker
+    docker:
+      - image: circleci/ruby:latest
 
 
 commands:
@@ -92,7 +97,7 @@ jobs:
                 path: artifacts/
 
   build_pkgs:
-    executor: linuxgo
+    executor: pkg
     steps:
       - buildevents/with_job_span:
           steps:
