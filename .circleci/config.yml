@@ -197,6 +197,7 @@ workflows:
       #       tags:
       #         only: /.*/
       - publish_github:
+          context: Honeycomb Secrets for Public Repos
           requires:
             - build_bins
           filters:
