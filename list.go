@@ -60,6 +60,9 @@ func (l *ListCommand) Execute(args []string) error {
 	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Add("X-Honeycomb-Team", options.WriteKey)
 	req.Header.Add("X-Honeycomb-Dataset", options.Dataset)
+	if options.AuthorizationHeader != "" {
+		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", options.AuthorizationHeader))
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return err

@@ -22,6 +22,9 @@ func (r *RmCommand) Execute(args []string) error {
 	req, err := http.NewRequest("DELETE", postURL.String(), nil)
 	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Add("X-Honeycomb-Team", options.WriteKey)
+	if options.AuthorizationHeader != "" {
+		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", options.AuthorizationHeader))
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
