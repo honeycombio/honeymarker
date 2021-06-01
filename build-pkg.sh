@@ -24,7 +24,7 @@ if [ -z "$version" ] || [ -z "$pkg_type" ]; then
 fi
 
 fpm -s dir -n honeymarker \
-    -m "Honeycomb <team@honeycomb.io>" \
+    -m "Honeycomb <solutions@honeycomb.io>" \
     -p $GOPATH/bin \
     -v $version \
     -t $pkg_type \
