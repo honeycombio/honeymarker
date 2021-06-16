@@ -181,6 +181,8 @@ workflows:
           filters:
             tags:
               only: /.*/
+            branches:
+              ignore: /pull\/.*/
       - test:
           context: Honeycomb Secrets for Public Repos
           requires:
