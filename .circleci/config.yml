@@ -1,20 +1,19 @@
 version: 2.1
 
 orbs:
-  buildevents: honeycombio/buildevents@0.2.3
-  aws-cli: circleci/aws-cli@0.1.13
+  buildevents: honeycombio/buildevents@0.2.8
+  aws-cli: circleci/aws-cli@2.0.3
 
 executors:
   linuxgo:
-    working_directory: /go/src/github.com/honeycombio/honeymarker
     docker:
-      - image: circleci/golang:1.12
+      - image: cimg/go:1.16
         environment:
           GO111MODULE: "on"
   pkg:
     ## executor with ruby for installing fpm and building packages
     docker:
-      - image: circleci/ruby:latest
+      - image: cimg/ruby:latest
 
 
 commands:
