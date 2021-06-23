@@ -40,6 +40,9 @@ func (a *AddCommand) Execute(args []string) error {
 	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("X-Honeycomb-Team", options.WriteKey)
+	if options.AuthorizationHeader != "" {
+		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", options.AuthorizationHeader))
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
