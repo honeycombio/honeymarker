@@ -17,6 +17,9 @@ Please see our [OSS process document](https://github.com/honeycombio/home/blob/m
 
 **Versions**
 
+- Go:
+- Honeymarker:
+
 
 **Steps to reproduce**
 
