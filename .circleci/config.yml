@@ -14,6 +14,11 @@ executors:
     ## executor with ruby for installing fpm and building packages
     docker:
       - image: cimg/ruby:latest
+  docker-publisher:
+    environment:
+      IMAGE_NAME: honeycombio/honeymarker
+    docker:
+      - image: circleci/buildpack-deps
 
 
 commands:
@@ -165,6 +170,24 @@ jobs:
   #                   aws s3 cp $artifact s3://honeycomb-builds/honeycombio/honeymarker/${BUILD_ID}/${BUILD_ID}.1/home/travis/gopath/bin/
   #                 done
 
+  publish-docker-tag:
+    executor: docker-publish
+    steps:
+      - buildevents/with_job_span:
+          steps:
+            - checkout
+            - setup_remote_docker
+            - run:
+                name: Build Docker image
+                command: docker build -t $IMAGE_NAME:latest .
+            - run:
+                name: Publish Docker Image to Docker Hub
+                command: |
+                  echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+                  IMAGE_TAG=${CIRCLE_TAG/v/''}
+                  docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
+                  docker push $IMAGE_NAME:latest
+                  docker push $IMAGE_NAME:$IMAGE_TAG
 
 workflows:
   build:
@@ -220,3 +243,12 @@ workflows:
       #         only: /^v.*/
       #       branches:
       #         ignore: /.*/
+      - publish-docker-tag:
+          context: Honeycomb Secrets for Public Repos
+          requires:
+            - build_bins
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
