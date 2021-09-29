@@ -177,17 +177,12 @@ jobs:
           steps:
             - checkout
             - setup_remote_docker
+            - run: go install github.com/google/ko@latest
             - run:
-                name: Build Docker image
-                command: docker build -t $IMAGE_NAME:latest .
-            - run:
-                name: Publish Docker Image to Docker Hub
+                name: "Publish multi-arch docker image"
                 command: |
-                  echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-                  IMAGE_TAG=${CIRCLE_TAG/v/''}
-                  docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
-                  docker push $IMAGE_NAME:latest
-                  docker push $IMAGE_NAME:$IMAGE_TAG
+                  echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin;
+                  VERSION=${CIRCLE_TAG} KO_DOCKER_REPO=honeycombio build/build_docker.sh
 
 workflows:
   build:
