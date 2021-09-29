@@ -14,12 +14,6 @@ executors:
     ## executor with ruby for installing fpm and building packages
     docker:
       - image: cimg/ruby:latest
-  docker-publisher:
-    environment:
-      IMAGE_NAME: honeycombio/honeymarker
-    docker:
-      - image: circleci/buildpack-deps
-
 
 commands:
   go-build:
@@ -171,7 +165,7 @@ jobs:
   #                 done
 
   publish-docker-tag:
-    executor: docker-publisher
+    executor: linuxgo
     steps:
       - buildevents/with_job_span:
           steps:
