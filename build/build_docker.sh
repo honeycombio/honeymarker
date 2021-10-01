@@ -1,15 +1,18 @@
 set -o nounset
 set -o pipefail
 
-VERSION="${VERSION:-dev}"
 TAGS="latest"
+VERSION=${CIRCLE_TAG:-dev}
+REPO=${KO_DOCKER_REPO:-ko.local}
 if [[ $VERSION != "dev" ]]; then
+    # set docker username and add version tag
+    REPO="honeycombio"
     TAGS+=",$VERSION"
 fi
 
 unset GOOS
 unset GOARCH
-export KO_DOCKER_REPO=${KO_DOCKER_REPO:-ko.local}
+export KO_DOCKER_REPO=$REPO
 export GOFLAGS="-ldflags=-X=main.BuildID=$VERSION"
 export SOURCE_DATE_EPOCH=$(date +%s)
 # shellcheck disable=SC2086
