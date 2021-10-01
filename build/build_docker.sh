@@ -1,5 +1,6 @@
 set -o nounset
 set -o pipefail
+set -o xtrace
 
 TAGS="latest"
 VERSION=${CIRCLE_TAG:-dev}
