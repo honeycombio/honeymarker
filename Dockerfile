@@ -1,6 +1,6 @@
-FROM golang:1.16.5-alpine3.13 as builder
+FROM golang:1.16.5-alpine3.13
 
-RUN apk update
+RUN apk update && rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
@@ -17,6 +17,4 @@ RUN CGO_ENABLED=0 \
     go build \
     -o honeymarker
 
-FROM scratch
-
-COPY --from=builder /app/honeymarker /usr/bin/honeymarker
+RUN mv /app/honeymarker /usr/bin/honeymarker
