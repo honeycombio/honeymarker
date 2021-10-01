@@ -7,7 +7,7 @@
 ## Installation
 
 ```
-$ go get github.com/honeycombio/honeymarker
+$ go install github.com/honeycombio/honeymarker@latest
 $ honeymarker    # (if $GOPATH/bin is in your path.)
 ```
 
