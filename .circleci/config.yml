@@ -164,26 +164,33 @@ jobs:
   #                   aws s3 cp $artifact s3://honeycomb-builds/honeycombio/honeymarker/${BUILD_ID}/${BUILD_ID}.1/home/travis/gopath/bin/
   #                 done
 
-  publish-docker-tag:
-    executor: linuxgo
+  build_docker:
+    docker:
+      - image: cimg/go:1.16
     steps:
-      - buildevents/with_job_span:
-          steps:
-            - restore_cache:
-                keys:
-                  googleko
-            - run: go install github.com/google/ko@latest
-            - save_cache:
-                key: googleko
-                paths:
-                  - $GOPATH/bin/ko
-            - checkout
-            - setup_remote_docker
-            - run:
-                name: "Publish multi-arch docker image"
-                command: |
-                  echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin;
-                  build/build_docker.sh
+      - run: go install github.com/google/ko@latest
+      - checkout
+      - setup_remote_docker
+      - run: ./build-docker.sh
+      - run: mkdir -p ~/images
+      - run: docker save honeycombio/honeymarker | gzip > ~/images/honeymarker.tar.gz
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - images
+      - store_artifacts:
+          path: ~/images
+
+  publish_docker:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - attach_workspace:
+          at: ~/
+      - setup_remote_docker
+      - run: docker load -i ~/images/honeymarker.tar.gz
+      - run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin;
+      - run: docker image push -a honeycombio/honeymarker
 
 workflows:
   build:
@@ -216,6 +223,12 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - build_docker:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
       # - build_pkgs:
       #     requires:
       #       - setup
@@ -239,10 +252,12 @@ workflows:
       #         only: /^v.*/
       #       branches:
       #         ignore: /.*/
-      - publish-docker-tag:
+      - publish_docker:
           context: Honeycomb Secrets for Public Repos
           requires:
-            - build_bins
+            - build_docker
           filters:
             tags:
-              only: /.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/
