@@ -22,9 +22,3 @@ ko publish \
   --base-import-paths \
   --platform "linux/amd64,linux/arm64" \
   .
-
-# update tags to use correct org name
-for TAG in ${TAGS//,/ }
-do
-    docker image tag ko.local/honeymarker honeycombio/honeymarker:$TAG
-done
