@@ -80,6 +80,9 @@ jobs:
             - go-build:
                 os: darwin
                 arch: amd64
+            - go-build:
+                os: linux
+                arch: arm64
 
             - run: mkdir -v artifacts; cp -v $GOPATH/bin/honeymarker-* artifacts/
 
@@ -111,6 +114,7 @@ jobs:
                   ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-linux-386
                   ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-linux-amd64
                   ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-darwin-amd64
+                  ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-linux-arm64
 
   build_docker:
     docker:
