@@ -14,12 +14,6 @@ executors:
     ## executor with ruby for installing fpm and building packages
     docker:
       - image: cimg/ruby:latest
-  docker-publisher:
-    environment:
-      IMAGE_NAME: honeycombio/honeymarker
-    docker:
-      - image: circleci/buildpack-deps
-
 
 commands:
   go-build:
@@ -32,7 +26,7 @@ commands:
       arch:
         description: Target architecture
         type: enum
-        enum: ["386", "amd64"]
+        enum: ["386", "amd64", "arm64"]
         default: "amd64"
     steps:
       - run: |
@@ -86,6 +80,9 @@ jobs:
             - go-build:
                 os: darwin
                 arch: amd64
+            - go-build:
+                os: linux
+                arch: arm64
 
             - run: mkdir -v artifacts; cp -v $GOPATH/bin/honeymarker-* artifacts/
 
@@ -100,41 +97,6 @@ jobs:
                   - honeymarker-*
             - store_artifacts:
                 path: artifacts/
-
-
-  # build_pkgs:
-  #   executor: pkg
-  #   steps:
-  #     - buildevents/with_job_span:
-  #         steps:
-  #           - checkout
-  #           - run: sudo apt-get -qq update
-  #           - run: sudo apt-get install -y build-essential rpm
-  #           - run: gem install fpm
-
-  #           - attach_workspace:
-  #               at: artifacts
-
-  #           - buildevents/berun:
-  #               bename: build_deb
-  #               becommand: ./build-pkg.sh -v "1.${BUILD_ID}" -t deb
-  #           - buildevents/berun:
-  #               bename: build_rpm
-  #               becommand: ./build-pkg.sh -v "1.${BUILD_ID}" -t rpm
-
-  #           - run: mkdir -v artifacts; cp -v $GOPATH/bin/honeymarker-* artifacts/
-
-  #           - run: echo "size=$(du -sb artifacts | cut -f 1)" >> $BASH_ENV
-  #           - buildevents/add_context:
-  #               field_name: artifacts_size_bytes
-  #               field_value: $size
-
-  #           - persist_to_workspace:
-  #               root: artifacts
-  #               paths:
-  #                 - honeymarker-*
-  #           - store_artifacts:
-  #               path: artifacts/
 
   publish_github:
     docker:
@@ -152,42 +114,33 @@ jobs:
                   ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-linux-386
                   ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-linux-amd64
                   ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-darwin-amd64
+                  ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./artifacts/honeymarker-linux-arm64
 
-  # publish_s3:
-  #   executor: linuxgo
-  #   steps:
-  #     - buildevents/with_job_span:
-  #         steps:
-  #           - attach_workspace:
-  #               at: artifacts
-  #           - run: echo "export BUILD_ID=$(cat workspace/build_id)" >> $BASH_ENV
-  #           - run:
-  #               name: "Publish Released Packages to S3"
-  #               command: |
-  #                 echo "about to publish to tag ${CIRCLE_TAG}"
-  #                 ls -l *
-  #                 for artifact in artifacts/honeymarker-*; do
-  #                   aws s3 cp $artifact s3://honeycomb-builds/honeycombio/honeymarker/${BUILD_ID}/${BUILD_ID}.1/home/travis/gopath/bin/
-  #                 done
-
-  publish-docker-tag:
-    executor: docker-publisher
+  build_docker:
+    docker:
+      - image: cimg/go:1.16
     steps:
-      - buildevents/with_job_span:
-          steps:
-            - checkout
-            - setup_remote_docker
-            - run:
-                name: Build Docker image
-                command: docker build -t $IMAGE_NAME:latest .
-            - run:
-                name: Publish Docker Image to Docker Hub
-                command: |
-                  echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-                  IMAGE_TAG=${CIRCLE_TAG/v/''}
-                  docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
-                  docker push $IMAGE_NAME:latest
-                  docker push $IMAGE_NAME:$IMAGE_TAG
+      - run: go install github.com/google/ko@latest
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: build docker images and publish locally
+          command: ./build-docker.sh
+
+  publish_docker:
+    docker:
+      - image: cimg/go:1.16
+    steps:
+      - run: go install github.com/google/ko@latest
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: build docker images and publish to Docker Hub
+          environment:
+            KO_DOCKER_REPO: honeycombio
+          command: |
+            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin;
+            ./build-docker.sh
 
 workflows:
   build:
@@ -220,33 +173,27 @@ workflows:
           filters:
             tags:
               only: /.*/
-      # - build_pkgs:
-      #     requires:
-      #       - setup
-      #     filters:
-      #       tags:
-      #         only: /.*/
+      - build_docker:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
       - publish_github:
           context: Honeycomb Secrets for Public Repos
           requires:
             - build_bins
+            - build_docker
           filters:
             tags:
               only: /^v.*/
             branches:
               ignore: /.*/
-      # - publish_s3:
-      #     requires:
-      #       - build_pkgs
-      #     filters:
-      #       tags:
-      #         only: /^v.*/
-      #       branches:
-      #         ignore: /.*/
-      - publish-docker-tag:
+      - publish_docker:
           context: Honeycomb Secrets for Public Repos
           requires:
             - build_bins
+            - build_docker
           filters:
             tags:
               only: /^v.*/
