@@ -7,7 +7,7 @@ orbs:
 executors:
   linuxgo:
     docker:
-      - image: cimg/go:1.16
+      - image: cimg/go:1.17
         environment:
           GO111MODULE: "on"
   pkg:
@@ -118,7 +118,7 @@ jobs:
 
   build_docker:
     docker:
-      - image: cimg/go:1.16
+      - image: cimg/go:1.17
     steps:
       - run: go install github.com/google/ko@latest
       - checkout
@@ -129,7 +129,7 @@ jobs:
 
   publish_docker:
     docker:
-      - image: cimg/go:1.16
+      - image: cimg/go:1.17
     steps:
       - run: go install github.com/google/ko@latest
       - checkout
