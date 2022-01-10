@@ -1,5 +1,12 @@
 # honeymarker changelog
 
+## [0.2.2] - 2022-01-19
+
+- update go to v1.17 (#38) | [@MikeGoldSmith](https://github.com/MikeGoldsmith)
+- ci: allow forked builds (#37) | [@vreynolds](https://github.com/vreynolds)
+- gh: add re-triage workflow (#36) | [@vreynolds](https://github.com/vreynolds)
+- empower apply-labels action to apply labels (#35) | [@robbkidd](https://github.com/robbkidd)
+
 ## [0.2.1] - 2021-10-13
 
 ### Added
