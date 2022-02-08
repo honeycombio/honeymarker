@@ -4,10 +4,10 @@ import "time"
 
 // The marker type, as described by https://honeycomb.io/docs/reference/api/#markers
 type marker struct {
-	ID string `json:"id"`
+	ID string `json:"id,omitempty"`
 
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 
 	// StartTime unix timestamp truncates to seconds
 	StartTime int64 `json:"start_time,omitempty"`
