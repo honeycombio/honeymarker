@@ -1,5 +1,11 @@
 # honeymarker changelog
 
+## [0.2.3] - 2022-02-10
+
+### Fixes
+
+- honeymarker: omit empty datetime fields on req (#41) | [@bradolson-virta](https://github.com/bradolson-virta)
+
 ## [0.2.2] - 2022-01-19
 
 - update go to v1.17 (#38) | [@MikeGoldSmith](https://github.com/MikeGoldsmith)
