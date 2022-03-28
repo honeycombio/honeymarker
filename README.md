@@ -18,7 +18,7 @@ $ honeymarker    # (if $GOPATH/bin is in your path.)
 `$ honeymarker -k <your-writekey> -d <dataset> COMMAND [command-specific flags]`
 
 * `<your-writekey>` can be found on https://ui.honeycomb.io/account
-* `<dataset>` is the name of one of the datasets associated with the team whose writekey you're using.
+* `<dataset>` is the name of one of the datasets associated with the team whose writekey you're using. You can use `__all__` as dataset name to work with environment-wide markers.
 * `COMMAND` see below
 
 ## Available commands:
