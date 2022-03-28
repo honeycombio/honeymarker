@@ -1,5 +1,12 @@
 # honeymarker changelog
 
+## [0.2.4] - 2022-03-29
+
+### Maintenance
+
+- maint: update release job (#45) | [@vreynolds](https://github.com/vreynolds)
+- docs: how to use with environments (#44) | [@vreynolds](https://github.com/vreynolds)
+
 ## [0.2.3] - 2022-02-10
 
 ### Fixes
