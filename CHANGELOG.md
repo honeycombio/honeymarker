@@ -1,5 +1,9 @@
 # honeymarker changelog
 
+## [0.2.5] - 2022-05-02
+
+- Resolve CVE by upgrading to a newer docker version (#47) | [@kentquirk](https://github.com/kentquirk)
+
 ## [0.2.4] - 2022-03-29
 
 ### Maintenance
