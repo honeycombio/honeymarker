@@ -8,7 +8,7 @@ function usage() {
     exit 2
 }
 
-while getopts "v:t:" opt; do
+while getopts "v:t:m:" opt; do
     case "$opt" in
     v)
         version=$OPTARG
@@ -16,10 +16,13 @@ while getopts "v:t:" opt; do
     t)
         pkg_type=$OPTARG
         ;;
+    m)
+        arch=$OPTARG
+        ;;
     esac
 done
 
-if [ -z "$version" ] || [ -z "$pkg_type" ]; then
+if [ -z "$version" ] || [ -z "$pkg_type" ] || [ -z "$arch" ]; then
     usage
 fi
 
@@ -28,4 +31,5 @@ fpm -s dir -n honeymarker \
     -p $GOPATH/bin \
     -v $version \
     -t $pkg_type \
-    artifacts/honeymarker=/usr/bin/honeymarker
+    -a $arch \
+    artifacts/honeymarker-linux-${arch}=/usr/bin/honeymarker
