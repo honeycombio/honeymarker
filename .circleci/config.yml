@@ -73,6 +73,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - checkout
+      - run: sudo gem install fpm
       - run: ./build-pkg.sh -m << parameters.arch >> -v "${CIRCLE_TAG}" -t deb && mv *.deb ~/artifacts
       - run: ./build-pkg.sh -m << parameters.arch >> -v "${CIRCLE_TAG}" -t rpm && mv *.rpm ~/artifacts
       - run: echo "finished builds" && find ~/artifacts -ls
