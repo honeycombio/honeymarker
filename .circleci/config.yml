@@ -32,7 +32,7 @@ jobs:
       - checkout
       - run: go test --timeout 10s -v ./...
 
-  build-bins:
+  build_bins:
     docker:
       - image: cimg/go:1.18
     parameters:
@@ -102,7 +102,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - aws-cli/install
-      - aws-cli/configure:
+      - aws-cli/setup:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
@@ -140,17 +140,11 @@ workflows:
   version: 2
   build:
     jobs:
-      - setup:
-          filters:
-            tags:
-              only: /.*/
       - test:
-          requires:
-            - setup
           filters:
             tags:
               only: /.*/
-      - build-bins:
+      - build_bins:
           <<: *platform_matrix
           requires:
             - test
@@ -163,7 +157,7 @@ workflows:
               arch: *arches
           context: Honeycomb Secrets for Public Repos
           requires:
-            - build-bins
+            - build_bins
           filters:
             tags:
               # temporarily allow tags that start with t so we can test builds without publishing
