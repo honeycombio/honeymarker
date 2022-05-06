@@ -53,7 +53,7 @@ jobs:
           GOARCH=<< parameters.arch >> \
           CGO_ENABLED=0 \
           go build -ldflags "-X main.BuildID=${CIRCLE_TAG}" \
-          -o $GOPATH/bin/honeymarker-<< parameters.os >>-<< parameters.arch >> \
+          -o ~/artifacts/honeymarker-<< parameters.os >>-<< parameters.arch >> \
           .
       - persist_to_workspace:
           root: ~/
