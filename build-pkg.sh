@@ -28,7 +28,7 @@ fi
 
 fpm -s dir -n honeymarker \
     -m "Honeycomb <solutions@honeycomb.io>" \
-    -p $GOPATH/bin \
+    -p ~/artifacts \
     -v $version \
     -t $pkg_type \
     -a $arch \
