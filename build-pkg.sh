@@ -32,4 +32,4 @@ fpm -s dir -n honeymarker \
     -v $version \
     -t $pkg_type \
     -a $arch \
-    artifacts/honeymarker-linux-${arch}=/usr/bin/honeymarker
+    ~/artifacts/honeymarker-linux-${arch}=/usr/bin/honeymarker
