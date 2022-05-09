@@ -3,13 +3,12 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@2.0.3
   docker: circleci/docker@1.3.0
-  rpmbuild: aursu/rpmbuild@1.1.8
 
 executors:
   pkg:
     ## executor with fpm and npmbuild
     docker:
-      - image: alanfranz/fpm-within-docker:ubuntu-bionic
+      - image: alanfranz/fpm-within-docker:centos-8
 
 platform_matrix: &platform_matrix
   matrix:
