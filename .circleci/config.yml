@@ -58,7 +58,9 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - artifacts/honeymarker-<< parameters.os >>-<< parameters.arch >>
+            - artifacts
+          store_artifacts:
+            path: honeymarker-<< parameters.os >>-<< parameters.arch >>
 
   ## We only have to build packages for linux, so we iterate architectures and build rpm and deb for each.
   build_packages:
@@ -81,9 +83,9 @@ jobs:
           paths:
             - artifacts
       - store_artifacts:
-          path: ~/artifacts/*<< parameters.arch >>.deb
+          path: *<< parameters.arch >>.deb
       - store_artifacts:
-          path: ~/artifacts/*<< parameters.arch >>.rpm
+          path: *<< parameters.arch >>.rpm
 
   publish_github:
     docker:
