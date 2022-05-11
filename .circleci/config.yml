@@ -81,7 +81,9 @@ jobs:
           paths:
             - artifacts
       - store_artifacts:
-          path: ~/artifacts
+          path: ~/artifacts/*<< parameters.arch >>.deb
+      - store_artifacts:
+          path: ~/artifacts/*<< parameters.arch >>.rpm
 
   publish_github:
     docker:
