@@ -92,7 +92,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: cp -R ~/binaries ~/artifacts
-      - run: find "~/packages/*" -type f -print0 |xargs -0 -I {} cp {} ~/artifacts
+      - run: find ~/packages -type f -print0 |xargs -0 -I {} cp {} ~/artifacts
       - persist_to_workspace:
           root: ~/
           paths:
