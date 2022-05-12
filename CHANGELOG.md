@@ -1,5 +1,11 @@
 # honeymarker changelog
 
+## [0.2.7] - 2022-05-12
+
+### Maintenance
+
+- A few more changes to CI pipeline to fix 64-bit RPM issues (#52) | [@kentquirk](https://github.com/kentquirk)
+
 ## [0.2.6] - 2022-05-10
 
 ### Maintenance
