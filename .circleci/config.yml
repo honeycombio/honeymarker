@@ -176,7 +176,7 @@ workflows:
             - build_bins
           filters:
             tags:
-              only: /^v.*/
+              only: /^[tv].*/
             branches:
               ignore: /.*/
       - build_docker:
@@ -197,7 +197,7 @@ workflows:
             - consolidate_artifacts
           filters:
             tags:
-              only: /^v.*/
+              only: /^[tv].*/
             branches:
               ignore: /.*/
       - publish_s3:
