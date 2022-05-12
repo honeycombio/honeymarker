@@ -26,7 +26,7 @@ if [ -z "$version" ] || [ -z "$pkg_type" ] || [ -z "$arch" ]; then
     usage
 fi
 
-PACKAGE_DIR = ~/packages/${arch}
+PACKAGE_DIR=~/packages/${arch}
 mkdir -p ${PACKAGE_DIR}
 fpm -s dir -n honeymarker \
     -m "Honeycomb <solutions@honeycomb.io>" \
