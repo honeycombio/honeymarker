@@ -83,7 +83,7 @@ jobs:
           paths:
             - packages/<< parameters.arch >>/*
       - store_artifacts:
-          path: ~/packages/<< parameters.arch >>/*
+          path: ~/packages/<< parameters.arch >>
 
   consolidate_artifacts:
     docker:
