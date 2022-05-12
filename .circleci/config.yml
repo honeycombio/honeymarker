@@ -53,12 +53,14 @@ jobs:
           GOARCH=<< parameters.arch >> \
           CGO_ENABLED=0 \
           go build -ldflags "-X main.BuildID=${CIRCLE_TAG}" \
-          -o ~/artifacts/honeymarker-<< parameters.os >>-<< parameters.arch >> \
+          -o ~/binaries/honeymarker-<< parameters.os >>-<< parameters.arch >> \
           .
       - persist_to_workspace:
           root: ~/
           paths:
-            - artifacts/honeymarker-<< parameters.os >>-<< parameters.arch >>
+            - binaries/honeymarker-<< parameters.os >>-<< parameters.arch >>
+      - store_artifacts:
+          path: binaries/honeymarker-<< parameters.os >>-<< parameters.arch >>
 
   ## We only have to build packages for linux, so we iterate architectures and build rpm and deb for each.
   build_packages:
@@ -75,16 +77,27 @@ jobs:
       - checkout
       - run: ./build-pkg.sh -m << parameters.arch >> -v "${CIRCLE_TAG}" -t deb
       - run: ./build-pkg.sh -m << parameters.arch >> -v "${CIRCLE_TAG}" -t rpm
-      - run: echo "finished builds" && find ~/artifacts -ls
+      - run: echo "finished building packages" && find ~/packages -ls
       - persist_to_workspace:
           root: ~/
           paths:
-            - artifacts/honeymarker*<< parameters.arch >>.deb
-            - artifacts/honeymarker*<< parameters.arch >>.rpm
+            - packages/<< parameters.arch >>/*
       - store_artifacts:
-          path: ~/artifacts/honeymarker*<< parameters.arch >>.deb
-      - store_artifacts:
-          path:  ~/artifacts/honeymarker*<< parameters.arch >>.rpm
+          path: ~/packages/<< parameters.arch >>/*
+
+  consolidate_artifacts:
+    docker:
+    - image: cimg/go:1.18
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: cp -R ~/binaries ~/artifacts
+      - run: find "~/packages/*" -type f -print0 |xargs -0 -I {} cp {} ~/artifacts
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - artifacts
+
 
   publish_github:
     docker:
@@ -163,8 +176,7 @@ workflows:
             - build_bins
           filters:
             tags:
-              # temporarily allow tags that start with t so we can test builds without publishing
-              only: /^[vt].*/
+              only: /^v.*/
             branches:
               ignore: /.*/
       - build_docker:
@@ -173,10 +185,16 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - consolidate_artifacts:
+          requires:
+            - build_packages
+          filters:
+            tags:
+              only: /.*/
       - publish_github:
           context: Honeycomb Secrets for Public Repos
           requires:
-            - build_packages
+            - consolidate_artifacts
           filters:
             tags:
               only: /^v.*/
@@ -185,7 +203,7 @@ workflows:
       - publish_s3:
           context: Honeycomb Secrets for Public Repos
           requires:
-            - build_packages
+            - consolidate_artifacts
           filters:
             tags:
               only: /^v.*/
@@ -194,7 +212,6 @@ workflows:
       - publish_docker:
           context: Honeycomb Secrets for Public Repos
           requires:
-            - build_bins
             - build_docker
           filters:
             tags:

@@ -26,10 +26,12 @@ if [ -z "$version" ] || [ -z "$pkg_type" ] || [ -z "$arch" ]; then
     usage
 fi
 
+PACKAGE_DIR = ~/packages/${arch}
+mkdir -p ${PACKAGE_DIR}
 fpm -s dir -n honeymarker \
     -m "Honeycomb <solutions@honeycomb.io>" \
-    -p ~/artifacts \
+    -p ${PACKAGE_DIR} \
     -v $version \
     -t $pkg_type \
     -a $arch \
-    ~/artifacts/honeymarker-linux-${arch}=/usr/bin/honeymarker
+    ~/binaries/honeymarker-linux-${arch}=/usr/bin/honeymarker
