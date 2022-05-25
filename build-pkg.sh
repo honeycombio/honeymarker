@@ -28,7 +28,7 @@ fi
 
 if [ "$pkg_type" -eq "deb" ]; then
     # for .deb, remove the leading v from version since debian doesn't permit that
-    version=${OPTARG:1}
+    version=${version:1}
 fi
 
 PACKAGE_DIR=~/packages/${arch}
