@@ -26,6 +26,11 @@ if [ -z "$version" ] || [ -z "$pkg_type" ] || [ -z "$arch" ]; then
     usage
 fi
 
+if [ "$pkg_type" -eq "deb" ]; then
+    # for .deb, remove the leading v from version since debian doesn't permit that
+    version=${version:1}
+fi
+
 PACKAGE_DIR=~/packages/${arch}
 mkdir -p ${PACKAGE_DIR}
 fpm -s dir -n honeymarker \
