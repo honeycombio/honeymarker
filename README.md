@@ -15,16 +15,17 @@ $ honeymarker    # (if $GOPATH/bin is in your path.)
 
 ## Usage
 
-`$ honeymarker -k <your-writekey> -d <dataset> COMMAND [command-specific flags]`
+`$ honeymarker -k <your-writekey> -d <dataset> [--version] COMMAND [command-specific flags]`
 
 * `<your-writekey>` can be found on https://ui.honeycomb.io/account
 * `<dataset>` is the name of one of the datasets associated with the team whose writekey you're using. You can use `__all__` as dataset name to work with environment-wide markers.
 * `COMMAND` see below
+* if `--version` is specified, honeymarker prints its current version and immediately exits.
 
 ## Available commands:
 
-| Command  | Description |
-| -------- | ----------- |
+| Command  | Description      |
+| -------- | ---------------- |
 | `add`    | add a new marker |
 | `list`   | list all markers |
 | `rm`     | delete a marker  |
@@ -33,13 +34,13 @@ $ honeymarker    # (if $GOPATH/bin is in your path.)
 
 ## Adding markers (`add`)
 
-| Name | Flag | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| Start Time | `-s <arg>` / `--start_time=<arg>` | start time for the marker in unix time (seconds since the epoch) | No |
-| End Time | `-e <arg>` / `--end_time=<arg>` | end time for the marker in unix time (seconds since the epoch) | No |
-| Message | `-m <arg>` / `--msg=<arg>` | message describing this specific marker | No |
-| URL | `-u <arg>` / `--url=<arg>` | URL associated with this marker | No |
-| Type | `-t <arg>` / `--type=<arg>` | identifies marker type | No |
+| Name       | Flag                              | Description                                                      | Required |
+| ---------- | --------------------------------- | ---------------------------------------------------------------- | -------- |
+| Start Time | `-s <arg>` / `--start_time=<arg>` | start time for the marker in unix time (seconds since the epoch) | No       |
+| End Time   | `-e <arg>` / `--end_time=<arg>`   | end time for the marker in unix time (seconds since the epoch)   | No       |
+| Message    | `-m <arg>` / `--msg=<arg>`        | message describing this specific marker                          | No       |
+| URL        | `-u <arg>` / `--url=<arg>`        | URL associated with this marker                                  | No       |
+| Type       | `-t <arg>` / `--type=<arg>`       | identifies marker type                                           | No       |
 
 All parameters to add are optional.
 
@@ -63,10 +64,10 @@ $
 
 ## Listing markers (`list`)
 
-| Name | Flag | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| JSON | `--json` | Output the list as json instead of in tabular form | No |
-| Unix Timestamps | `--unix_time` | In table mode, format times as unit timestamps (seconds since the epoch) | No |
+| Name            | Flag          | Description                                                              | Required |
+| --------------- | ------------- | ------------------------------------------------------------------------ | -------- |
+| JSON            | `--json`      | Output the list as json instead of in tabular form                       | No       |
+| Unix Timestamps | `--unix_time` | In table mode, format times as unit timestamps (seconds since the epoch) | No       |
 
 Example:
 ```
@@ -80,14 +81,14 @@ $
 
 ## Updating markers (`update`)
 
-| Name | Flag | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| Marker ID | `-i <arg>` / `--id=<arg>` | ID of the marker to update | Yes |
-| Start Time | `-s <arg>` / `--start_time=<arg>` | start time for the marker in unix time (seconds since the epoch) | No |
-| End Time | `-e <arg>` / `--end_time=<arg>` | end time for the marker in unix time (seconds since the epoch) | No |
-| Message | `-m <arg>` / `--msg=<arg>` | message describing this specific marker | No |
-| URL | `-u <arg>` / `--url=<arg>` | URL associated with this marker | No |
-| Type | `-t <arg>` / `--type=<arg>` | identifies marker type | No |
+| Name       | Flag                              | Description                                                      | Required |
+| ---------- | --------------------------------- | ---------------------------------------------------------------- | -------- |
+| Marker ID  | `-i <arg>` / `--id=<arg>`         | ID of the marker to update                                       | Yes      |
+| Start Time | `-s <arg>` / `--start_time=<arg>` | start time for the marker in unix time (seconds since the epoch) | No       |
+| End Time   | `-e <arg>` / `--end_time=<arg>`   | end time for the marker in unix time (seconds since the epoch)   | No       |
+| Message    | `-m <arg>` / `--msg=<arg>`        | message describing this specific marker                          | No       |
+| URL        | `-u <arg>` / `--url=<arg>`        | URL associated with this marker                                  | No       |
+| Type       | `-t <arg>` / `--type=<arg>`       | identifies marker type                                           | No       |
 
 The marker ID is available from the `list` command, and is also output to the console by the `add` command.
 
@@ -101,9 +102,9 @@ $
 
 ## Deleting markers (`rm`)
 
-| Name | Flag | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| Marker ID | `-i <arg>` / `--id=<arg>` | ID of the marker to delete | Yes |
+| Name      | Flag                      | Description                | Required |
+| --------- | ------------------------- | -------------------------- | -------- |
+| Marker ID | `-i <arg>` / `--id=<arg>` | ID of the marker to delete | Yes      |
 
 The marker ID is available from the `list` command, and is also output to the console by the `add` command.
 
