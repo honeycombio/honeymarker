@@ -8,16 +8,17 @@ import (
 	flag "github.com/jessevdk/go-flags"
 )
 
-// BuildID is set by Travis CI
-var BuildID string
+// BuildID is set by CI
+var BuildID string = "dev"
 
 // UserAgent is what gets included in all http requests to the api
 var UserAgent string
 
 type Options struct {
-	WriteKey string `short:"k" long:"writekey" description:"Honeycomb write key from https://ui.honeycomb.io/account" required:"true"`
-	Dataset  string `short:"d" long:"dataset" description:"Honeycomb dataset name from https://ui.honeycomb.io/dashboard (use __all__ for environment-wide markers)" required:"true"`
+	WriteKey string `short:"k" long:"writekey" description:"Honeycomb write key from https://ui.honeycomb.io/account"`
+	Dataset  string `short:"d" long:"dataset" description:"Honeycomb dataset name from https://ui.honeycomb.io/dashboard (use __all__ for environment-wide markers)"`
 	APIHost  string `long:"api_host" hidden:"true" default:"https://api.honeycomb.io/"`
+	Version  bool   `long:"version" description:"Print version number and exit."`
 
 	AuthorizationHeader string `long:"authorization-header" hidden:"true"`
 }
@@ -37,18 +38,31 @@ var usage = `-k <writekey> -d <dataset> COMMAND [other flags]
 
 // setVersion sets the internal version ID and updates libhoney's user-agent
 func setVersionUserAgent() {
-	var version string
-
-	if BuildID == "" {
-		version = "dev"
-	} else {
-		version = BuildID
-	}
-	UserAgent = fmt.Sprintf("honeymarker/%s", version)
+	UserAgent = fmt.Sprintf("honeymarker/%s", BuildID)
 }
 
 func main() {
 	setVersionUserAgent()
+
+	// Call Parse() once without the subcommands so we can get the version flag if it's specified
+	if _, err := parser.Parse(); err == nil {
+		if options.Version {
+			fmt.Printf("Honeymarker version %s\n", BuildID)
+			os.Exit(0)
+		}
+	}
+
+	// In order to do the above, we can't use the "required" flag on the options, so we have to
+	// check them manually.
+	if options.WriteKey == "" {
+		fmt.Println("the required flag `-k, --writekey' was not specified")
+		os.Exit(1)
+	}
+
+	if options.Dataset == "" {
+		fmt.Println("the required flag `-d, --dataset' was not specified")
+		os.Exit(1)
+	}
 
 	parser.AddCommand("add", "Add a new marker",
 		`add creates a new marker with the specified attributes.
@@ -95,6 +109,7 @@ func main() {
 				os.Exit(0)
 			}
 			if flagErr.Type == flag.ErrCommandRequired ||
+				flagErr.Type == flag.ErrUnknownCommand ||
 				flagErr.Type == flag.ErrUnknownFlag ||
 				flagErr.Type == flag.ErrRequired {
 				fmt.Println("  run 'honeymarker --help' for full usage details")
