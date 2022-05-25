@@ -5,6 +5,8 @@
 ### Maintenance
 
 - Strip the leading v from the version number for Debian packages (#55) | [@kentquirk](https://github.com/kentquirk)
+
+### Added
 - Add --version flag for printing the version (#56) | [@kentquirk](https://github.com/kentquirk)
 
 ## [0.2.7] - 2022-05-12
