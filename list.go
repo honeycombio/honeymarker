@@ -50,6 +50,7 @@ func (l *ListCommand) formatTime(timestamp int64) string {
 }
 
 func (l *ListCommand) Execute(args []string) error {
+	checkRequiredFlags()
 	postURL, err := url.Parse(options.APIHost)
 	if err != nil {
 		errMsg := fmt.Sprintf("Failed to parse URL %s", options.APIHost)
