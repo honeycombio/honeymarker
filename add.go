@@ -19,6 +19,7 @@ type AddCommand struct {
 }
 
 func (a *AddCommand) Execute(args []string) error {
+	checkRequiredFlags()
 	blob, err := json.Marshal(marker{
 		StartTime: a.StartTime,
 		EndTime:   a.EndTime,

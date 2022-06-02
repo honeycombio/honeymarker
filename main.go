@@ -18,7 +18,6 @@ type Options struct {
 	WriteKey string `short:"k" long:"writekey" description:"Honeycomb write key from https://ui.honeycomb.io/account"`
 	Dataset  string `short:"d" long:"dataset" description:"Honeycomb dataset name from https://ui.honeycomb.io/dashboard (use __all__ for environment-wide markers)"`
 	APIHost  string `long:"api_host" hidden:"true" default:"https://api.honeycomb.io/"`
-	Version  bool   `long:"version" description:"Print version number and exit."`
 
 	AuthorizationHeader string `long:"authorization-header" hidden:"true"`
 }
@@ -28,10 +27,10 @@ var parser = flag.NewParser(&options, flag.Default)
 var client = http.Client{}
 var usage = `-k <writekey> -d <dataset> COMMAND [other flags]
 
-  honeymarker is the command line utility for manipulating markers in your
+  honeymarker is a command line utility for manipulating markers in your
   Honeycomb dataset.
 
-  Writekey and Dataset are both required. Most commands have additional
+  Except for the Version command, Writekey and Dataset are both required. Most commands have additional
   arguments.
 
   'honeymarker COMMAND --help' will print command-specific flags`
@@ -41,17 +40,7 @@ func setVersionUserAgent() {
 	UserAgent = fmt.Sprintf("honeymarker/%s", BuildID)
 }
 
-func main() {
-	setVersionUserAgent()
-
-	// Call Parse() once without the subcommands so we can get the version flag if it's specified
-	if _, err := parser.Parse(); err == nil {
-		if options.Version {
-			fmt.Printf("Honeymarker version %s\n", BuildID)
-			os.Exit(0)
-		}
-	}
-
+func checkRequiredFlags() {
 	// In order to do the above, we can't use the "required" flag on the options, so we have to
 	// check them manually.
 	if options.WriteKey == "" {
@@ -63,6 +52,10 @@ func main() {
 		fmt.Println("the required flag `-d, --dataset' was not specified")
 		os.Exit(1)
 	}
+}
+
+func main() {
+	setVersionUserAgent()
 
 	parser.AddCommand("add", "Add a new marker",
 		`add creates a new marker with the specified attributes.
@@ -99,6 +92,10 @@ func main() {
 	parameters are optional, though an 'update' will be a no-op unless a parameter
 	is specified with a new value.`,
 		&UpdateCommand{})
+
+	parser.AddCommand("version", "Print tool version",
+		`Prints the version number of this tool and exits.`,
+		&VersionCommand{})
 
 	// run whichever command is chosen
 	parser.Usage = usage
