@@ -1,5 +1,10 @@
 # honeymarker changelog
 
+## [0.2.9] - 2022-06-02
+
+### Fixes
+- Change --version flag to version subcommand (#59) | [@kentquirk](https://github.com/kentquirk)
+
 ## [0.2.8] - 2022-05-25
 
 ### Maintenance

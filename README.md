@@ -20,17 +20,16 @@ $ honeymarker    # (if $GOPATH/bin is in your path.)
 * `<your-writekey>` can be found on https://ui.honeycomb.io/account
 * `<dataset>` is the name of one of the datasets associated with the team whose writekey you're using. You can use `__all__` as dataset name to work with environment-wide markers.
 * `COMMAND` see below
-* if `--version` is specified, honeymarker prints its current version and immediately exits.
 
 ## Available commands:
 
-| Command  | Description      |
-| -------- | ---------------- |
-| `add`    | add a new marker |
-| `list`   | list all markers |
-| `rm`     | delete a marker  |
-| `update` | update a marker  |
-
+| Command   | Description            |
+| --------- | ---------------------- |
+| `add`     | add a new marker       |
+| `list`    | list all markers       |
+| `rm`      | delete a marker        |
+| `update`  | update a marker        |
+| `version` | print version and exit |
 
 ## Adding markers (`add`)
 
