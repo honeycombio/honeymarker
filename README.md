@@ -2,7 +2,7 @@
 
 [![OSS Lifecycle](https://img.shields.io/osslifecycle/honeycombio/honeymarker?color=success)](https://github.com/honeycombio/home/blob/main/honeycomb-oss-lifecycle-and-practices.md)
 
-`honeymarker` provides a simple CRUD interface for dealing with per-dataset [https://honeycomb.io/docs/guides/best-practices/#use-markers](markers) on https://honeycomb.io/.
+`honeymarker` provides a simple CRUD interface for dealing with per-dataset [markers](https://docs.honeycomb.io/working-with-your-data/markers/) on https://honeycomb.io/.
 
 ## Installation
 
