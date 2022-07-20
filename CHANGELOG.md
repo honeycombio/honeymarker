@@ -1,5 +1,11 @@
 # honeymarker changelog
 
+## [0.2.10] - 2022-07-20
+
+### Maintenance
+
+- Release to fix OpenSSL CVE
+
 ## [0.2.9] - 2022-06-02
 
 ### Fixes
