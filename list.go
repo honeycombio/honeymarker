@@ -86,7 +86,7 @@ func (l *ListCommand) Execute(args []string) error {
 }
 
 func (l *ListCommand) ListAsJSON(body []byte) error {
-	// newlineify the JSON for one marker per line
+	// newlinify the JSON for one marker per line
 	// TODO json-pretty-print based on a flag or something
 	prettyBody := strings.Replace(string(body), "},{", "},\n{", -1)
 	fmt.Println(prettyBody)
