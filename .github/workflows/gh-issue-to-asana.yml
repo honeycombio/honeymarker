@@ -1,4 +1,4 @@
-name: Sync Github Issue to Asana
+name: Sync GitHub Issue to Asana
 on:
   issues:
     types: [opened]

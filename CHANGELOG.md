@@ -72,6 +72,6 @@
 - Add issue and PR templates (#21)
 - Add OSS lifecycle badge (#20)
 - Add community health files (#19)
-- Updates Github Action Workflows (#18)
+- Updates GitHub Action Workflows (#18)
 - Adds Dependabot (#17)
 - Switches CODEOWNERS to telemetry-team (#16)

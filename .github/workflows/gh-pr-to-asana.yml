@@ -1,4 +1,4 @@
-name: Sync Github Pull Request to Asana
+name: Sync GitHub Pull Request to Asana
 on:
   pull_request_target:
     types: [opened, reopened]
