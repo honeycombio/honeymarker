@@ -57,7 +57,7 @@ func (l *ListCommand) Execute(args []string) error {
 		return errors.New(errMsg)
 	}
 	postURL.Path = "/1/markers/" + options.Dataset
-	req, err := http.NewRequest("GET", postURL.String(), nil)
+	req, _ := http.NewRequest("GET", postURL.String(), nil)
 	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Add("X-Honeycomb-Team", options.WriteKey)
 	req.Header.Add("X-Honeycomb-Dataset", options.Dataset)
