@@ -27,14 +27,14 @@ platform_matrix: &platform_matrix
 jobs:
   test:
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.21
     steps:
       - checkout
       - run: go test --timeout 10s -v ./...
 
   build_bins:
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.21
     parameters:
       os:
         description: Target operating system
@@ -87,7 +87,7 @@ jobs:
 
   consolidate_artifacts:
     docker:
-    - image: cimg/go:1.18
+    - image: cimg/go:1.21
     steps:
       - attach_workspace:
           at: ~/
@@ -128,7 +128,7 @@ jobs:
 
   build_docker:
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.21
     steps:
       - run: go install github.com/google/ko@latest
       - checkout
@@ -139,7 +139,7 @@ jobs:
 
   publish_docker:
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.21
     steps:
       - run: go install github.com/google/ko@latest
       - checkout
