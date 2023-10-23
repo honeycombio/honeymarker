@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 set -o nounset
 set -o pipefail
 set -o xtrace
@@ -15,6 +17,7 @@ unset GOOS
 unset GOARCH
 export KO_DOCKER_REPO=${KO_DOCKER_REPO:-ko.local}
 export GOFLAGS="-ldflags=-X=main.BuildID=$VERSION"
+# shellcheck disable=SC2155
 export SOURCE_DATE_EPOCH=$(date +%s)
 # shellcheck disable=SC2086
 ko publish \
