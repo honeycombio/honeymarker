@@ -1,5 +1,24 @@
 # honeymarker changelog
 
+## [0.2.11] - 2023-10-23
+
+### Added
+
+- Adding env support for write key (#76) | [@elliotpope](https://github.com/elliottpope)
+
+### Fixes
+
+- add missing permissions for label action (#71) | [@jsoref](https://github.com/jsoref)
+- strip leading 'v' from version for Debian (#77) | [@jharley](https://github.com/jharley)
+
+### Maintenance
+
+- chore: integrate with internal Asana (#66, #67, #68, #73)
+- maint: bump github.com/jessevdk/go-flags (#69)
+- maint: bump golang.org/x/sys from 0.0.0-20210320140829-1e4c9ba3b0c4 to 0.1.0 (#70)
+- chore: spelling fixes (#72) | [@jsoref](https://github.com/jsoref)
+- chore: switch to temp credentials for CI (#74) | [@NLincoln](https://github.com/nlincoln)
+
 ## [0.2.10] - 2022-07-20
 
 ### Maintenance
