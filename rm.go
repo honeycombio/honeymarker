@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -20,7 +20,7 @@ func (r *RmCommand) Execute(args []string) error {
 		return errors.New(errMsg)
 	}
 	postURL.Path = "/1/markers/" + options.Dataset + "/" + r.MarkerID
-	req, err := http.NewRequest("DELETE", postURL.String(), nil)
+	req, _ := http.NewRequest("DELETE", postURL.String(), nil)
 	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Add("X-Honeycomb-Team", options.WriteKey)
 	if options.AuthorizationHeader != "" {
@@ -31,7 +31,7 @@ func (r *RmCommand) Execute(args []string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -39,7 +39,7 @@ func (u *UpdateCommand) Execute(args []string) error {
 	}
 	postURL.Path = "/1/markers/" + options.Dataset + "/" + u.MarkerID
 
-	req, err := http.NewRequest("PUT", postURL.String(), bytes.NewBuffer(blob))
+	req, _ := http.NewRequest("PUT", postURL.String(), bytes.NewBuffer(blob))
 	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("X-Honeycomb-Team", options.WriteKey)
@@ -51,7 +51,7 @@ func (u *UpdateCommand) Execute(args []string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
