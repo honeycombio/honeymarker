@@ -15,7 +15,7 @@ var BuildID string = "dev"
 var UserAgent string
 
 type Options struct {
-	WriteKey string `short:"k" long:"writekey" env:"HONEYCOMB_API_KEY" description:"Honeycomb write key from https://ui.honeycomb.io/account"`
+	WriteKey string `short:"k" long:"writekey" env:"HONEYCOMB_API_KEY" description:"Honeycomb configuration key from https://ui.honeycomb.io/<team>/environments/<environment>/api_keys"`
 	Dataset  string `short:"d" long:"dataset" description:"Honeycomb dataset name from https://ui.honeycomb.io/dashboard (use __all__ for environment-wide markers)"`
 	APIHost  string `long:"api_host" hidden:"true" default:"https://api.honeycomb.io/"`
 

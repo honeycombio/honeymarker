@@ -15,10 +15,10 @@ $ honeymarker    # (if $GOPATH/bin is in your path.)
 
 ## Usage
 
-`$ honeymarker -k <your-writekey> -d <dataset> [--version] COMMAND [command-specific flags]`
+`$ honeymarker -k <your-configuration-key> -d <dataset> [--version] COMMAND [command-specific flags]`
 
-* `<your-writekey>` can be found on https://ui.honeycomb.io/account
-* `<dataset>` is the name of one of the datasets associated with the team whose writekey you're using. You can use `__all__` as dataset name to work with environment-wide markers.
+* `<your-configuration-key>` can be found on `https://ui.honeycomb.io/<team>/environments/<environment>/api_keys`. You can also set it as `HONEYCOMB_API_KEY` 
+* `<dataset>` is the name of one of the datasets associated with the team whose configuration key you're using. You can use `__all__` as dataset name to work with environment-wide markers.
 * `COMMAND` see below
 
 ## Available commands:
@@ -55,7 +55,7 @@ as a link in the UI, and clicking it will take you to the URL.
 Example:
 
 ```
-$ ./honeymarker -k $WRITE_KEY -d myservice add -t deploy -m "build 192837"
+$ ./honeymarker -k $CONFIGURATION_KEY -d myservice add -t deploy -m "build 192837"
 {"created_at":"2017-06-28T18:55:11Z","updated_at":"2017-06-28T18:55:11Z","start_time":1498676111,"message":"build 192837","type":"deploy","id":"n71R3zM1Tn3"}
 
 $
@@ -70,7 +70,7 @@ $
 
 Example:
 ```
-$ ./honeymarker -k $WRITE_KEY -d myservice list
+$ ./honeymarker -k $CONFIGURATION_KEY -d myservice list
 | ID          |      Start Time |        End Time | Type         | Message      | URL |
 +-------------+-----------------+-----------------+--------------+--------------+-----+
 | n71R3zM1Tn3 | Jun 28 11:55:11 |                 | deploy       | build 192837 |     |
@@ -93,7 +93,7 @@ The marker ID is available from the `list` command, and is also output to the co
 
 Example:
 ```
-$ ./honeymarker -k $WRITE_KEY -d myservice update -i n71R3zM1Tn3 -u "http://my.service.co/builds/192837"
+$ ./honeymarker -k $CONFIGURATION_KEY -d myservice update -i n71R3zM1Tn3 -u "http://my.service.co/builds/192837"
 {"created_at":"2017-06-28T18:55:11Z","updated_at":"2017-06-28T18:55:11Z","start_time":1498676111,"message":"build 192837","type":"deploy","url":"http://my.service.co/builds/192837","id":"n71R3zM1Tn3"}
 
 $
@@ -109,10 +109,10 @@ The marker ID is available from the `list` command, and is also output to the co
 
 Example:
 ```
-$ ./honeymarker -k $WRITE_KEY -d myservice rm -i n71R3zM1Tn3
+$ ./honeymarker -k $CONFIGURATION_KEY -d myservice rm -i n71R3zM1Tn3
 {"created_at":"2017-06-28T18:55:11Z","updated_at":"2017-06-28T18:57:47Z","start_time":1498676111,"message":"build 192837","type":"deploy","url":"http://my.service.co/builds/192837","id":"n71R3zM1Tn3"}
 
-$ ./honeymarker -k $WRITE_KEY -d myservice list
+$ ./honeymarker -k $CONFIGURATION_KEY -d myservice list
 | ID          |      Start Time |        End Time | Type         | Message | URL |
 +-------------+-----------------+-----------------+--------------+---------+-----+
 $
