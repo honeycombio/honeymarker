@@ -1,5 +1,11 @@
 # honeymarker changelog
 
+## [0.2.12] - 2024-04-09
+
+### Maintenance
+
+- Document use of configuration key instead of writekey (#79) | [@danielcompton](https://github.com/danielcompton)
+
 ## [0.2.11] - 2023-10-23
 
 ### Added
