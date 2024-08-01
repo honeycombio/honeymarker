@@ -12,4 +12,4 @@ updates:
     labels:
       - "type: dependencies"
     reviewers:
-      - "honeycombio/api-team"
+      - "honeycombio/scale"
