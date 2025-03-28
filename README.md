@@ -17,7 +17,7 @@ $ honeymarker    # (if $GOPATH/bin is in your path.)
 
 `$ honeymarker -k <your-configuration-key> -d <dataset> [--version] COMMAND [command-specific flags]`
 
-* `<your-configuration-key>` can be found on `https://ui.honeycomb.io/<team>/environments/<environment>/api_keys`. You can also set it as `HONEYCOMB_API_KEY` 
+* `<your-configuration-key>` can be found on `https://ui.honeycomb.io/<team>/environments/<environment>/api_keys`. You can also set it as `HONEYCOMB_API_KEY`
 * `<dataset>` is the name of one of the datasets associated with the team whose configuration key you're using. You can use `__all__` as dataset name to work with environment-wide markers.
 * `COMMAND` see below
 
@@ -71,9 +71,9 @@ $
 Example:
 ```
 $ ./honeymarker -k $CONFIGURATION_KEY -d myservice list
-| ID          |      Start Time |        End Time | Type         | Message      | URL |
-+-------------+-----------------+-----------------+--------------+--------------+-----+
-| n71R3zM1Tn3 | Jun 28 11:55:11 |                 | deploy       | build 192837 |     |
+| ID          |         Start Time |           End Time | Type         | Message      | URL |
++-------------+--------------------+--------------------+--------------+--------------+-----+
+| n71R3zM1Tn3 | Jun 28 24 11:55:11 |                    | deploy       | build 192837 |     |
 
 $
 ```
@@ -113,8 +113,8 @@ $ ./honeymarker -k $CONFIGURATION_KEY -d myservice rm -i n71R3zM1Tn3
 {"created_at":"2017-06-28T18:55:11Z","updated_at":"2017-06-28T18:57:47Z","start_time":1498676111,"message":"build 192837","type":"deploy","url":"http://my.service.co/builds/192837","id":"n71R3zM1Tn3"}
 
 $ ./honeymarker -k $CONFIGURATION_KEY -d myservice list
-| ID          |      Start Time |        End Time | Type         | Message | URL |
-+-------------+-----------------+-----------------+--------------+---------+-----+
+| ID          |         Start Time |           End Time | Type         | Message | URL |
++-------------+--------------------+--------------------+--------------+---------+-----+
 $
 ```
 
