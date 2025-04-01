@@ -19,7 +19,7 @@ type ListCommand struct {
 
 const (
 	IdColumnWidth         = 11
-	TimeColumnWidthPretty = 18
+	TimeColumnWidthPretty = 20
 	TimeColumnWidthUnix   = 10
 	TypeColumnWidth       = 12
 
@@ -29,7 +29,7 @@ const (
 	URLColumnMinWidth     = len("URL")
 
 	// TimeFormat is the same as time.Stamp but with the year added to it.
-	TimeFormat = "Jan _2 06 15:04:05"
+	TimeFormat = "Jan _2 2006 15:04:05"
 )
 
 func truncateStr(str string, maxWidth int) string {
