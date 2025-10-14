@@ -15,10 +15,11 @@ $ honeymarker    # (if $GOPATH/bin is in your path.)
 
 ## Usage
 
-`$ honeymarker -k <your-configuration-key> -d <dataset> [--version] COMMAND [command-specific flags]`
+`$ honeymarker -k <your-configuration-key> -d <dataset> [--api_host <api_host>] [--version] COMMAND [command-specific flags]`
 
 * `<your-configuration-key>` can be found on `https://ui.honeycomb.io/<team>/environments/<environment>/api_keys`. You can also set it as `HONEYCOMB_API_KEY`
 * `<dataset>` is the name of one of the datasets associated with the team whose configuration key you're using. You can use `__all__` as dataset name to work with environment-wide markers.
+* <api_host> is the API host for your region. Defaults to https://api.honeycomb.io. Example: use `https://api.eu1.honeycomb.io` for EU1.
 * `COMMAND` see below
 
 ## Available commands:
