@@ -1,5 +1,19 @@
 # honeymarker changelog
 
+## [0.2.13] - 2026-10-20
+
+### Fixes
+
+- include the year for times when in a table (#84) | [@robinjoseph08](https://github.com/robinjoseph08)
+
+### Maintenance
+
+- maint: bump Go to 1.27.3 to distrust the compromised eMudhra intermediate CAs (CVE-2026-111943) (#86) | [@lizthegrey](https://github.com/lizthegrey)
+- maint: bump github.com/jessevdk/go-flags from 1.5.0 to 1.6.1 (#81)
+- chore: updates github team name to reflect the new name (#83) | [@mjayaram](https://github.com/mjayaram)
+- docs: update vulnerability reporting process (#82) | [@robbkidd](https://github.com/robbkidd)
+- docs: add --api_host to readme and reveal in --help output (#85) | [@evanderkoogh](https://github.com/evanderkoogh)
+
 ## [0.2.12] - 2024-04-09
 
 ### Maintenance
